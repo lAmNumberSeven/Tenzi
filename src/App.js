@@ -47,7 +47,7 @@ export default function App(){
    setIsPaused(true)
 
    //for the first round store the current time as best time along with the amount of rolls that occurred that round
-   if(stats.bestTime === 0){
+   if(stats.bestTime === 0 || JSON.parse(localStorage.getItem("bestTime")) === 0){
     setStats(() => ({
      bestTime: localStorage.setItem("bestTime", JSON.stringify(time)),
      rolls: localStorage.setItem("rolls", JSON.stringify(counter))
@@ -55,7 +55,8 @@ export default function App(){
    }
 
    //checks for best time
-   if(time < stats.bestTime){
+   console.log("Time:" + time + " local storage:" +  localStorage.getItem("bestTime") + " stats.bestTime: " + stats.bestTime)
+   if(time <  stats.bestTime){
     setStats(() => ({
      bestTime: localStorage.setItem("bestTime", JSON.stringify(time)),
      rolls: localStorage.setItem("rolls", JSON.stringify(counter))
@@ -121,7 +122,9 @@ export default function App(){
  ))
 
  function clearData(){
-  localStorage.clear()
+  localStorage.setItem("bestTime", JSON.stringify(0))
+  localStorage.setItem("rolls", JSON.stringify(0))
+  alert("Best Score Cleared")
  }
 
  const bestStoredTime = localStorage.getItem("bestTime")
@@ -136,7 +139,7 @@ export default function App(){
    <p><Timer time={time}/> Rolls: {counter}</p>
    <hr/>
    <Stats time={bestStoredTime} rolls={storedRolls}/>
-   {tenzi && <button onClick={clearData}>clear</button>}
+   {tenzi && <button className="reset" onClick={clearData}>Clear Record</button>}
    <button className="roll-dice" onClick={rollDice}>{tenzi ? "New Game" : "Roll"}</button>
   </main>
  )
